@@ -1,0 +1,35 @@
+= Config ServerでGitリポジトリを複数もつサンプル
+
+* リファレンスは https://cloud.spring.io/spring-cloud-static/Greenwich.RELEASE/multi/multi__spring_cloud_config_server.html#composite-environment-repositories[ここ]
+
+* ポイントは、config-serverのapplication.ymlに `composite` プロファイルを指定すること。
+** 上に書いたリポジトリの値ほど優先される
+** 常にすべてのリポジトリからpullするっぽい。
+
+* repos/repo1/client.properties
+
+----
+message1=hello from repo1
+#message2=good afternoon from repo1
+----
+
+* repos/repo2/client.properties
+
+----
+#message1=hello from repo2
+message2=good afternoon from repo2
+----
+
+* 実行結果
+
+----
+ $ curl -X GET http://localhost:8080 | jq
+{
+  "message1": "hello from repo1",
+  "message2": "good afternoon from repo2"
+}
+----
+
+* 多分、冗長化のための機能ではない。片方のGitリポジトリがないと起動時例外。
+
+* repo1/client.propertiesからコメントアウトを外した後、リフレッシュをすると成功したっぽいがレスポンスのmessage2は変わらず "... from repo2"。なんでだろう。

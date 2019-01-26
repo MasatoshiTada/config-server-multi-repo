@@ -1,0 +1,15 @@
+server.port: 8888
+
+spring:
+  profiles:
+    active: composite
+  cloud:
+    config:
+      server:
+        composite:
+          -
+            type: git
+            uri: file:///Users/xxxx/Desktop/repos/repo1
+          -
+            type: git
+            uri: file:///Users/xxxx/Desktop/repos/repo2
